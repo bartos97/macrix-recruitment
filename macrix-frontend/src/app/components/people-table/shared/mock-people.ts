@@ -1,6 +1,6 @@
 import { PersonEntity } from "./person-entity.model";
 
-export const PEOPLE_REGISTRY: PersonEntity[] = [
+export const MOCK_PEROPLE_REPO: PersonEntity[] = [
     {
         "firstName": "Emmalee",
         "lastName": "Cullabine",

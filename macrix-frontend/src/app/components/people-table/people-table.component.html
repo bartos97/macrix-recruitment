@@ -1,0 +1,130 @@
+<form [formGroup]="tableForm" (ngSubmit)="onFormSubmit()">
+    <div class="table-wrapper mat-elevation-z2" formArrayName="peopleFormArray">
+        <table mat-table [dataSource]="dataSource" class="people-table">
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; let i = index; columns: displayedColumns;"></tr>
+
+            <ng-container matColumnDef="firstName">
+                <th mat-header-cell *matHeaderCellDef>First name</th>
+                <td mat-cell [formGroupName]="i" *matCellDef="let rowFormGroup; let i = index;">
+                    <mat-form-field>
+                        <input matInput name="firstName-{{i}}" id="firstName-{{i}}" formControlName="firstName"
+                               type="text" [attr.aria-label]="'First name in row ' + i">
+                    </mat-form-field>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="lastName">
+                <th mat-header-cell *matHeaderCellDef>Last name</th>
+                <td mat-cell [formGroupName]="i" *matCellDef="let rowFormGroup; let i = index;">
+                    <mat-form-field>
+                        <input matInput name="lastName-{{i}}" id="lastName-{{i}}" formControlName="lastName" type="text"
+                               [attr.aria-label]="'Last name in row ' + i">
+                    </mat-form-field>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="streetName">
+                <th mat-header-cell *matHeaderCellDef>Street name</th>
+                <td mat-cell [formGroupName]="i" *matCellDef="let rowFormGroup; let i = index;">
+                    <mat-form-field>
+                        <input matInput name="streetName-{{i}}" id="streetName-{{i}}" formControlName="streetName"
+                               type="text" [attr.aria-label]="'Street name in row ' + i">
+                    </mat-form-field>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="houseNumber">
+                <th mat-header-cell *matHeaderCellDef>House nubmer</th>
+                <td mat-cell [formGroupName]="i" *matCellDef="let rowFormGroup; let i = index;">
+                    <mat-form-field>
+                        <input matInput name="houseNumber-{{i}}" id="houseNumber-{{i}}" formControlName="houseNumber"
+                               type="text" [attr.aria-label]="'House number in row ' + i">
+                    </mat-form-field>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="apartmentNumber">
+                <th mat-header-cell *matHeaderCellDef>Apartment number</th>
+                <td mat-cell [formGroupName]="i" *matCellDef="let rowFormGroup; let i = index;">
+                    <mat-form-field>
+                        <input matInput name="apartmentNumber-{{i}}" id="apartmentNumber-{{i}}"
+                               formControlName="apartmentNumber" type="text"
+                               [attr.aria-label]="'Appartment number in row ' + i">
+                    </mat-form-field>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="postalCode">
+                <th mat-header-cell *matHeaderCellDef>Postal code</th>
+                <td mat-cell [formGroupName]="i" *matCellDef="let rowFormGroup; let i = index;">
+                    <mat-form-field>
+                        <input matInput name="postalCode-{{i}}" id="postalCode-{{i}}" formControlName="postalCode"
+                               type="text" [attr.aria-label]="'Postal code in row ' + i">
+                    </mat-form-field>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="town">
+                <th mat-header-cell *matHeaderCellDef>Town</th>
+                <td mat-cell [formGroupName]="i" *matCellDef="let rowFormGroup; let i = index;">
+                    <mat-form-field>
+                        <input matInput name="town-{{i}}" id="town-{{i}}" formControlName="town" type="text"
+                               [attr.aria-label]="'Town in row ' + i">
+                    </mat-form-field>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="phoneNumber">
+                <th mat-header-cell *matHeaderCellDef>Phone number</th>
+                <td mat-cell [formGroupName]="i" *matCellDef="let rowFormGroup; let i = index;">
+                    <mat-form-field>
+                        <input matInput name="phoneNumber-{{i}}" id="phoneNumber-{{i}}" formControlName="phoneNumber"
+                               type="text" [attr.aria-label]="'Phone number in row ' + i">
+                    </mat-form-field>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="dateOfBirth">
+                <th mat-header-cell *matHeaderCellDef>Date of birth</th>
+                <td mat-cell [formGroupName]="i" *matCellDef="let rowFormGroup; let i = index;">
+                    <mat-form-field>
+                        <input matInput [matDatepicker]="picker" name="dateOfBirth-{{i}}" id="dateOfBirth-{{i}}"
+                               formControlName="dateOfBirth" type="text"
+                               [attr.aria-label]="'Date of birth in row ' + i">
+                        <mat-hint>MM/DD/YYYY</mat-hint>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </td>
+
+            </ng-container>
+
+            <ng-container matColumnDef="age">
+                <th mat-header-cell *matHeaderCellDef>Age</th>
+                <td mat-cell *matCellDef="let rowFormGroup"> {{rowFormGroup.get('dateOfBirth').value | age}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let rowFormGroup; let i = index;">
+                    <div class="people-table-btns-wrap">
+                        <button type="button" mat-icon-button color="primary" matTooltip="Delete this entry"
+                                (click)="deleteRow(rowFormGroup)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                </td>
+            </ng-container>
+        </table>
+    </div>
+
+    <div class="buttons-wrap">
+        <button type="button" mat-button color="primary" (click)="addRow()">Add new person</button>
+        <span class="flex-spacer"></span>
+        <button type="button" mat-button color="warn" [disabled]="isDataUnchaged"
+                (click)="cancelChanges()">Cancel</button>
+        <button type="submit" mat-raised-button color="primary"
+                [disabled]="isDataUnchaged || !tableForm.valid">Save</button>
+    </div>
+</form>

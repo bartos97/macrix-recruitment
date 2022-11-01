@@ -4,18 +4,17 @@
         top: 0;
         left: 0;
         width: 100%;
+        z-index: 999;
     }
 
     &-content-wrapper {
-        display: flex;
-        justify-content: center;
-        width: 100%;
-        margin-top: var(--toolbar-height);
+        padding: 1rem;
+        padding-top: calc(var(--toolbar-height) + 0.9rem);
     }
 
     &-content {
-        padding: 1rem;
         width: 100%;
         max-width: var(--container-width);
+        margin: 0 auto;
     }
 }
