@@ -1,3 +1,4 @@
+using System.Reflection;
 using macrix_api.Models;
 
 const string corsPolicyDev = "corsPolicyDev";
@@ -20,7 +21,10 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<PeopleContext>();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options => {
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+});
 
 
 var app = builder.Build();

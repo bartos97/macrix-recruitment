@@ -20,9 +20,17 @@ namespace macrix_api.Controllers
             _context = context;
         }
 
-        // GET: api/People
+        /// <summary>
+        /// Get all entities from database
+        /// </summary>
+        /// <returns>List of entities</returns>
+        /// <response code="200">The request succeeded and data has been transfered</response>
+        /// <response code="404">There is a problem with database creation</response>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PersonEntity>>> GetpeopleEntities()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Produces("application/json")]
+        public async Task<ActionResult<IEnumerable<PersonEntity>>> GetPeopleEntities()
         {
             if (_context.peopleEntities == null)
             {
@@ -31,8 +39,17 @@ namespace macrix_api.Controllers
             return await _context.peopleEntities.ToListAsync();
         }
 
-        // GET: api/People/5
+        /// <summary>
+        /// Get entity with given ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>`PersonEntity` with given ID from database</returns>
+        /// <response code="200">The request succeeded and data has been transfered</response>
+        /// <response code="404">Entity with given ID doesn't exist</response>
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Produces("application/json")]
         public async Task<ActionResult<PersonEntity>> GetPersonEntity(long id)
         {
             if (_context.peopleEntities == null)
@@ -49,8 +66,19 @@ namespace macrix_api.Controllers
             return personEntity;
         }
 
-        // PUT: api/People/5
+        /// <summary>
+        /// Updates entity with given id with provided data
+        /// </summary>
+        /// <param name="id">ID of entity to update</param>
+        /// <param name="personEntity">Entity values to update</param>
+        /// <returns></returns>
+        /// <response code="204">The request succeeded</response>
+        /// <response code="400">Given ID differs from the one in the model</response>
+        /// <response code="404">Entity with given ID doesn't exist</response>
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> PutPersonEntity(long id, PersonEntity personEntity)
         {
             if (id != personEntity.id)
@@ -79,9 +107,15 @@ namespace macrix_api.Controllers
             return NoContent();
         }
 
-        // POST: api/People/saveChanges
-        [HttpPost("saveChanges")]
-        public async Task<IActionResult> PostSaveChanges(IEnumerable<PersonEntity> entities)
+        /// <summary>
+        /// Inserts new entities (with id == 0) to database or updates existing ones (with id > 0)
+        /// </summary>
+        /// <param name="entities">Array of `PersonEntity` objects</param>
+        /// <returns></returns>
+        /// <response code="204">The request succeeded</response>
+        [HttpPost("batchInsertUpdate")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> PostBatchInsertUpdate(IEnumerable<PersonEntity> entities)
         {
             if (_context.peopleEntities == null)
             {
@@ -90,15 +124,22 @@ namespace macrix_api.Controllers
 
             foreach (var item in entities)
             {
-                _context.Entry(item).State = item.id == 0 ? EntityState.Added : EntityState.Modified;
+                _context.Entry(item).State = item.id > 0 ? EntityState.Modified : EntityState.Added;
             }
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return NoContent();
         }
 
-        // POST: api/People
+        /// <summary>
+        /// Adds new entity to database
+        /// </summary>
+        /// <param name="personEntity"></param>
+        /// <returns>Newly inserted entity</returns>
+        /// <response code="201">The request succeeded</response>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [Produces("application/json")]
         public async Task<ActionResult<PersonEntity>> PostPersonEntity(PersonEntity personEntity)
         {
             if (_context.peopleEntities == null)
@@ -111,8 +152,16 @@ namespace macrix_api.Controllers
             return CreatedAtAction("GetPersonEntity", new { id = personEntity.id }, personEntity);
         }
 
-        // DELETE: api/People/5
+        /// <summary>
+        /// Deletes specified entity from database
+        /// </summary>
+        /// <param name="id">ID of entity to delete</param>
+        /// <returns></returns>
+        /// <response code="204">The request succeeded</response>
+        /// <response code="404">Entity with given ID doesn't exist</response>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeletePersonEntity(long id)
         {
             if (_context.peopleEntities == null)
