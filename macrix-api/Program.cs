@@ -4,12 +4,13 @@ const string corsPolicyDev = "corsPolicyDev";
 
 
 var builder = WebApplication.CreateBuilder(args);
+var settings = builder.Configuration.GetSection("Settings").Get<Settings>();
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: corsPolicyDev, policy =>
     {
-        policy.WithOrigins("http://localhost:4200", "https://localhost:4200");
+        policy.WithOrigins(settings.CorsHosts);
         policy.AllowAnyMethod();
         policy.AllowAnyHeader();
     });
