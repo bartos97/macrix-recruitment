@@ -15,6 +15,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { AgePipe } from './pipes/age.pipe';
 import { PeopleTableComponent } from './components/people-table/people-table.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { PeopleTableComponent } from './components/people-table/people-table.com
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

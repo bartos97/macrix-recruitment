@@ -24,10 +24,10 @@ namespace macrix_api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PersonEntity>>> GetpeopleEntities()
         {
-          if (_context.peopleEntities == null)
-          {
-              return NotFound();
-          }
+            if (_context.peopleEntities == null)
+            {
+                return NotFound();
+            }
             return await _context.peopleEntities.ToListAsync();
         }
 
@@ -35,10 +35,10 @@ namespace macrix_api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<PersonEntity>> GetPersonEntity(long id)
         {
-          if (_context.peopleEntities == null)
-          {
-              return NotFound();
-          }
+            if (_context.peopleEntities == null)
+            {
+                return NotFound();
+            }
             var personEntity = await _context.peopleEntities.FindAsync(id);
 
             if (personEntity == null)
@@ -79,14 +79,32 @@ namespace macrix_api.Controllers
             return NoContent();
         }
 
+        // POST: api/People/saveChanges
+        [HttpPost("saveChanges")]
+        public async Task<IActionResult> PostSaveChanges(IEnumerable<PersonEntity> entities)
+        {
+            if (_context.peopleEntities == null)
+            {
+                return Problem("Entity set 'PeopleContext.peopleEntities'  is null.");
+            }
+
+            foreach (var item in entities)
+            {
+                _context.Entry(item).State = item.id == 0 ? EntityState.Added : EntityState.Modified;
+            }
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
         // POST: api/People
         [HttpPost]
         public async Task<ActionResult<PersonEntity>> PostPersonEntity(PersonEntity personEntity)
         {
-          if (_context.peopleEntities == null)
-          {
-              return Problem("Entity set 'PeopleContext.peopleEntities'  is null.");
-          }
+            if (_context.peopleEntities == null)
+            {
+                return Problem("Entity set 'PeopleContext.peopleEntities'  is null.");
+            }
             _context.peopleEntities.Add(personEntity);
             await _context.SaveChangesAsync();
 

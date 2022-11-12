@@ -110,7 +110,7 @@
                 <td mat-cell *matCellDef="let rowFormGroup; let i = index;">
                     <div class="people-table-btns-wrap">
                         <button type="button" mat-icon-button color="primary" matTooltip="Delete this entry"
-                                (click)="deleteRow(rowFormGroup)">
+                                (click)="deleteRow(rowFormGroup, rowFormGroup.get('id').value)">
                             <mat-icon>delete</mat-icon>
                         </button>
                     </div>

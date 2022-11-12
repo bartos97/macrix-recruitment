@@ -8,5 +8,5 @@ export interface PersonEntity {
     postalCode: string;
     town: string;
     phoneNumber: string;
-    dateOfBirth: Date;
+    dateOfBirth: Date | string;
 }
