@@ -124,7 +124,8 @@ namespace macrix_api.Controllers
 
             foreach (var item in entities)
             {
-                _context.Entry(item).State = item.id > 0 ? EntityState.Modified : EntityState.Added;
+                bool isUpdate = item.id > 0;
+                _context.Entry(item).State = isUpdate ? EntityState.Modified : EntityState.Added;
             }
             await _context.SaveChangesAsync();
 

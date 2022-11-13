@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using macrix_api.Models;
 
@@ -10,9 +11,10 @@ using macrix_api.Models;
 namespace macrix_api.Migrations
 {
     [DbContext(typeof(PeopleContext))]
-    partial class PeopleContextModelSnapshot : ModelSnapshot
+    [Migration("20221113101502_AddPersonEntityTimestampsDefaultValues")]
+    partial class AddPersonEntityTimestampsDefaultValues
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.10");
@@ -26,10 +28,10 @@ namespace macrix_api.Migrations
                     b.Property<string>("ApartmentNumber")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("CreatedTimestamp")
+                    b.Property<DateTime>("CreatedTimestamp")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TEXT")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("TEXT");
@@ -46,10 +48,10 @@ namespace macrix_api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("LastUpdateTimestamp")
+                    b.Property<DateTime>("LastUpdateTimestamp")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TEXT")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()

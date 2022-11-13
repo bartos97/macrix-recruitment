@@ -35,6 +35,6 @@ export class PeopleTableService {
   }
 
   public saveChanges(enities: PersonEntity[]) {
-    return this.http.post(`${PREFIX}/saveChanges`, enities);
+    return this.http.post(`${PREFIX}/batchInsertUpdate`, enities);
   }
 }

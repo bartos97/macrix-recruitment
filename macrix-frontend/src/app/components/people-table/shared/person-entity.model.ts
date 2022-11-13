@@ -9,4 +9,6 @@ export interface PersonEntity {
     town: string;
     phoneNumber: string;
     dateOfBirth: Date | string;
+    createdTimestamp: Date | string;
+    lastUpdateTimestamp: Date | string;
 }

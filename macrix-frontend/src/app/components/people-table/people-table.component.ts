@@ -116,6 +116,7 @@ export class PeopleTableComponent implements OnInit {
       town: [dataItem?.town ?? "", Validators.required],
       phoneNumber: [dataItem?.phoneNumber ?? "", Validators.required],
       dateOfBirth: [dataItem?.dateOfBirth ?? "", Validators.required],
+      createdTimestamp: [dataItem?.createdTimestamp]
     });
   }
 
