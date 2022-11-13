@@ -108,31 +108,6 @@ namespace macrix_api.Controllers
         }
 
         /// <summary>
-        /// Inserts new entities (with id == 0) to database or updates existing ones (with id > 0)
-        /// </summary>
-        /// <param name="entities">Array of `PersonEntity` objects</param>
-        /// <returns></returns>
-        /// <response code="204">The request succeeded</response>
-        [HttpPost("batchInsertUpdate")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> PostBatchInsertUpdate(IEnumerable<PersonEntity> entities)
-        {
-            if (_context.peopleEntities == null)
-            {
-                return Problem("Entity set 'PeopleContext.peopleEntities'  is null.");
-            }
-
-            foreach (var item in entities)
-            {
-                bool isUpdate = item.id > 0;
-                _context.Entry(item).State = isUpdate ? EntityState.Modified : EntityState.Added;
-            }
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        /// <summary>
         /// Adds new entity to database
         /// </summary>
         /// <param name="personEntity"></param>
@@ -150,7 +125,7 @@ namespace macrix_api.Controllers
             _context.peopleEntities.Add(personEntity);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPersonEntity", new { id = personEntity.id }, personEntity);
+            return CreatedAtAction("PostPersonEntity", new { id = personEntity.id }, personEntity);
         }
 
         /// <summary>
@@ -179,6 +154,37 @@ namespace macrix_api.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        /// <summary>
+        /// Inserts new entities (with id == 0) to database or updates existing ones (with id > 0)
+        /// </summary>
+        /// <param name="entities">Array of `PersonEntity` objects</param>
+        /// <returns></returns>
+        /// <response code="204">The request succeeded</response>
+        /// <response code="201">The request succeeded and newly created entities are transmitted</response>
+        [HttpPost("batchInsertUpdate")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public async Task<IActionResult> PostBatchInsertUpdate(IEnumerable<PersonEntity> entities)
+        {
+            if (_context.peopleEntities == null)
+            {
+                return Problem("Entity set 'PeopleContext.peopleEntities'  is null.");
+            }
+
+            foreach (var item in entities)
+            {
+                bool isUpdate = item.id > 0;
+                _context.Entry(item).State = isUpdate ? EntityState.Modified : EntityState.Added;
+            }
+            var newEntities = entities.Where(x => x.id == 0).ToList();
+            await _context.SaveChangesAsync();
+
+            if (newEntities.Count > 0)
+                return CreatedAtAction("PostBatchInsertUpdate", newEntities);
+            else
+                return NoContent();
         }
 
         private bool PersonEntityExists(long id)

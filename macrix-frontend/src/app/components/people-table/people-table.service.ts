@@ -34,7 +34,7 @@ export class PeopleTableService {
     return this.http.delete(`${PREFIX}/${id}`);
   }
 
-  public saveChanges(enities: PersonEntity[]) {
-    return this.http.post(`${PREFIX}/batchInsertUpdate`, enities);
+  public saveChanges(enities: PersonEntity[]):  Observable<PersonEntity[] | null> {
+    return this.http.post<PersonEntity[]>(`${PREFIX}/batchInsertUpdate`, enities);
   }
 }

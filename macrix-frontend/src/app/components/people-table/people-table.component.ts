@@ -93,6 +93,21 @@ export class PeopleTableComponent implements OnInit {
 
     this.service.saveChanges(formValue).subscribe(result => {
       window.alert("Changes saved successufully!");
+
+      if (result) {
+        const indices = [];
+        for (const row of this.peopleFormArray.controls) {
+          const entity = row.value as PersonEntity;
+          if (!entity.id)
+            indices.push(this.peopleFormArray.controls.indexOf(row));
+        }
+        for (const index of indices) {
+          this.peopleFormArray.removeAt(index);
+        }
+        this.addDataToTable(result);
+        this.refreshTable();
+      }
+
       this.peopleFormArray.markAsPristine();
       this.unchangedData = this.peopleFormArray.controls.map(row => row.value) as PersonEntity[];
     });
