@@ -10,7 +10,7 @@ using macrix_api.Models;
 
 namespace macrix_api.Migrations
 {
-    [DbContext(typeof(PeopleContext))]
+    [DbContext(typeof(PeopleDbContext))]
     [Migration("20221104125741_InitialCreate")]
     partial class InitialCreate
     {

@@ -13,9 +13,9 @@ namespace macrix_api.Controllers
     [ApiController]
     public class PeopleController : ControllerBase
     {
-        private readonly PeopleContext _context;
+        private readonly IPeopleDbContext _context;
 
-        public PeopleController(PeopleContext context)
+        public PeopleController(IPeopleDbContext context)
         {
             _context = context;
         }
@@ -32,11 +32,11 @@ namespace macrix_api.Controllers
         [Produces("application/json")]
         public async Task<ActionResult<IEnumerable<PersonEntity>>> GetPeopleEntities()
         {
-            if (_context.peopleEntities == null)
-            {
+            var result = await _context.GetAllAsync();
+            if (result.Any())
+                return result.ToList();
+            else
                 return NotFound();
-            }
-            return await _context.peopleEntities.ToListAsync();
         }
 
         /// <summary>
@@ -52,17 +52,9 @@ namespace macrix_api.Controllers
         [Produces("application/json")]
         public async Task<ActionResult<PersonEntity>> GetPersonEntity(long id)
         {
-            if (_context.peopleEntities == null)
-            {
-                return NotFound();
-            }
-            var personEntity = await _context.peopleEntities.FindAsync(id);
-
+            var personEntity = await _context.GetOneAsync(id);
             if (personEntity == null)
-            {
                 return NotFound();
-            }
-
             return personEntity;
         }
 
@@ -82,26 +74,18 @@ namespace macrix_api.Controllers
         public async Task<IActionResult> PutPersonEntity(long id, PersonEntity personEntity)
         {
             if (id != personEntity.id)
-            {
                 return BadRequest();
-            }
-
-            _context.Entry(personEntity).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.ModifyOneAsync(personEntity);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PersonEntityExists(id))
-                {
+                if (!_context.EntityExists(id))
                     return NotFound();
-                }
                 else
-                {
                     throw;
-                }
             }
 
             return NoContent();
@@ -118,13 +102,7 @@ namespace macrix_api.Controllers
         [Produces("application/json")]
         public async Task<ActionResult<PersonEntity>> PostPersonEntity(PersonEntity personEntity)
         {
-            if (_context.peopleEntities == null)
-            {
-                return Problem("Entity set 'PeopleContext.peopleEntities'  is null.");
-            }
-            _context.peopleEntities.Add(personEntity);
-            await _context.SaveChangesAsync();
-
+            await _context.AddOneAsync(personEntity);
             return CreatedAtAction("PostPersonEntity", new { id = personEntity.id }, personEntity);
         }
 
@@ -140,20 +118,8 @@ namespace macrix_api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeletePersonEntity(long id)
         {
-            if (_context.peopleEntities == null)
-            {
-                return NotFound();
-            }
-            var personEntity = await _context.peopleEntities.FindAsync(id);
-            if (personEntity == null)
-            {
-                return NotFound();
-            }
-
-            _context.peopleEntities.Remove(personEntity);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            var result = await _context.DeleteOneAsync(id);
+            return result ? NoContent() : NotFound();
         }
 
         /// <summary>
@@ -168,28 +134,11 @@ namespace macrix_api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> PostBatchInsertUpdate(IEnumerable<PersonEntity> entities)
         {
-            if (_context.peopleEntities == null)
-            {
-                return Problem("Entity set 'PeopleContext.peopleEntities'  is null.");
-            }
-
-            foreach (var item in entities)
-            {
-                bool isUpdate = item.id > 0;
-                _context.Entry(item).State = isUpdate ? EntityState.Modified : EntityState.Added;
-            }
-            var newEntities = entities.Where(x => x.id == 0).ToList();
-            await _context.SaveChangesAsync();
-
-            if (newEntities.Count > 0)
+            var newEntities = await _context.BatchInsertUpdateAsync(entities);
+            if (newEntities.Any())
                 return CreatedAtAction("PostBatchInsertUpdate", newEntities);
             else
                 return NoContent();
-        }
-
-        private bool PersonEntityExists(long id)
-        {
-            return (_context.peopleEntities?.Any(e => e.id == id)).GetValueOrDefault();
         }
     }
 }

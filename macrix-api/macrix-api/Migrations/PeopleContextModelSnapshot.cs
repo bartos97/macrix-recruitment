@@ -9,7 +9,7 @@ using macrix_api.Models;
 
 namespace macrix_api.Migrations
 {
-    [DbContext(typeof(PeopleContext))]
+    [DbContext(typeof(PeopleDbContext))]
     partial class PeopleContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
