@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/macrix-api.csproj",
+                "${workspaceFolder}/macrix-api/macrix-api.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/macrix-api.csproj",
+                "${workspaceFolder}/macrix-api/macrix-api.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -33,7 +33,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/macrix-api.csproj"
+                "${workspaceFolder}/macrix-api/macrix-api.csproj"
             ],
             "problemMatcher": "$msCompile"
         }
