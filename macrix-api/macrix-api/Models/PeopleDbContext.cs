@@ -4,7 +4,7 @@ namespace macrix_api.Models;
 
 public class PeopleDbContext : DbContext, IPeopleDbContext
 {
-    public virtual DbSet<PersonEntity> peopleEntities { get; set; }
+    public virtual DbSet<PersonEntity> PeopleEntities { get; set; }
     public string DbPath { get; }
 
     public PeopleDbContext(DbContextOptions<PeopleDbContext> options) : base(options)
@@ -57,12 +57,12 @@ public class PeopleDbContext : DbContext, IPeopleDbContext
 
     public async Task<IEnumerable<PersonEntity>> GetAllAsync()
     {
-        return await peopleEntities.OrderBy(x => x.CreatedTimestamp).ToListAsync();
+        return await PeopleEntities.OrderBy(x => x.CreatedTimestamp).ToListAsync();
     }
 
     public async Task<PersonEntity?> GetOneAsync(long id)
     {
-        return await peopleEntities.FindAsync(id);
+        return await PeopleEntities.FindAsync(id);
     }
 
     public async Task ModifyOneAsync(PersonEntity entity)
@@ -73,18 +73,18 @@ public class PeopleDbContext : DbContext, IPeopleDbContext
 
     public async Task AddOneAsync(PersonEntity entity)
     {
-        peopleEntities.Add(entity);
+        PeopleEntities.Add(entity);
         await SaveChangesAsync();
     }
 
     public async Task<bool> DeleteOneAsync(long id)
     {
-        var personEntity = await peopleEntities.FindAsync(id);
+        var personEntity = await PeopleEntities.FindAsync(id);
         if (personEntity == null)
         {
             return false;
         }
-        peopleEntities.Remove(personEntity);
+        PeopleEntities.Remove(personEntity);
         await SaveChangesAsync();
         return true;
     }
@@ -103,6 +103,6 @@ public class PeopleDbContext : DbContext, IPeopleDbContext
 
     public bool EntityExists(long id)
     {
-        return (peopleEntities?.Any(e => e.id == id)).GetValueOrDefault();
+        return (PeopleEntities?.Any(e => e.id == id)).GetValueOrDefault();
     }
 }

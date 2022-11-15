@@ -95,8 +95,8 @@ namespace macrix_api.Controllers
         /// Adds new entity to database
         /// </summary>
         /// <param name="personEntity"></param>
-        /// <returns>Newly inserted entity</returns>
-        /// <response code="201">The request succeeded</response>
+        /// <returns></returns>
+        /// <response code="201">The request succeeded and newly created entity is transmitted</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [Produces("application/json")]
@@ -132,7 +132,7 @@ namespace macrix_api.Controllers
         [HttpPost("batchInsertUpdate")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> PostBatchInsertUpdate(IEnumerable<PersonEntity> entities)
+        public async Task<ActionResult<IEnumerable<PersonEntity>>> PostBatchInsertUpdate(IEnumerable<PersonEntity> entities)
         {
             var newEntities = await _context.BatchInsertUpdateAsync(entities);
             if (newEntities.Any())
