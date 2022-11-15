@@ -3,11 +3,11 @@ import { Injectable } from '@angular/core';
 import sampleSize from 'lodash-es/sampleSize';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 import { MOCK_PEROPLE_REPO } from './shared/mock-people';
 import { PersonEntity } from './shared/person-entity.model';
 
 const PREFIX = 'https://localhost:7227/api/People';
-const IS_MOCK = false;
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class PeopleTableService {
   constructor(private http: HttpClient) { }
 
   public getAll(): Observable<PersonEntity[]> {
-    if (IS_MOCK)
+    if (environment.useFakeData)
       return of(sampleSize(MOCK_PEROPLE_REPO, 10));
     
     return this.http.get<PersonEntity[]>(`${PREFIX}`).pipe(map(response => {
@@ -28,7 +28,7 @@ export class PeopleTableService {
   }
 
   public removeOne(id: number) {
-    if (!Number.isInteger(id) || IS_MOCK)
+    if (!Number.isInteger(id) || environment.useFakeData)
       return of();
     
     return this.http.delete(`${PREFIX}/${id}`);
