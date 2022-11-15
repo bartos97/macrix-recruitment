@@ -11,6 +11,7 @@ public class PeopleDbContext : DbContext, IPeopleDbContext
     {
         var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         DbPath = System.IO.Path.Join(path, "macrix_api_people.db");
+        Database.EnsureCreated();
     }
 
     public PeopleDbContext() { }
